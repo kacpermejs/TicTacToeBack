@@ -67,6 +67,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>tic-tac-toe-back</finalName>
 	</build>
 
 </project>
