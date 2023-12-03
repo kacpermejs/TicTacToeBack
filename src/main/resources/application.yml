@@ -1,6 +1,8 @@
+
+#TODO: multiple configurations for local debugging and production
 spring:
     data:
         mongodb:
-            host: 127.0.0.1
+            host: host.docker.internal
             database: test
             port: 27017
