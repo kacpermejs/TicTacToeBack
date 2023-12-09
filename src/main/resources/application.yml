@@ -1,8 +1,61 @@
 
-#TODO: multiple configurations for local debugging and production
+# Common Configuration
+server:
+  port: 8080
+
+
+
 spring:
-    data:
-        mongodb:
-            host: host.docker.internal
-            database: test
-            port: 27017
+    # Default profile is 'development'
+    # use "java -jar app.jar --spring.profiles.active=prod" to switch into production
+    profiles:
+        active: dev
+    config:
+        additional-location: optional:secrets.yml
+    application:
+        name: tic-tac-toe-back
+    datasource:
+        hikari:
+            maximum-pool-size: 5
+
+# Development Profile Configuration
+---
+spring:
+    config:
+        activate:
+                on-profile: dev
+    h2:
+        console:
+            enabled: true
+    datasource:
+        url: jdbc:h2:mem:testdb
+        driver-class-name: org.h2.Driver
+        username: sa
+        password: password
+    jpa:
+        hibernate:
+            ddl-auto: update
+
+# Production Profile Configuration
+---
+spring:
+    config:
+        activate:
+                on-profile: prod
+    datasource:
+        url: jdbc:postgresql://your-rds-endpoint:5432/yourdbname
+        driver-class-name: org.postgresql.Driver
+        username: ${rds.datasource.username}
+        password: ${rds.datasource.password}
+    jpa:
+        hibernate:
+            ddl-auto: update
+
+# Optional AWS Credential Service Configuration (for future use)
+# ---
+# spring:
+#     profiles: aws-credentials
+#     rds:
+#         datasource:
+#             username: ${aws.rds.datasource.username}
+#             password: ${aws.rds.datasource.password}

@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    User getUser(@PathVariable String id) {
+    User getUser(@PathVariable Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    User getUser(@PathVariable String id, @RequestBody User user) {
+    User getUser(@PathVariable Long id, @RequestBody User user) {
         User oldUser = userRepository.findById(id).orElse(null);
         oldUser.setName(user.getName());
 
@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    String deleteUser(@PathVariable String id) {
+    Long deleteUser(@PathVariable Long id) {
         userRepository.deleteById(id);
         return id;
     }
