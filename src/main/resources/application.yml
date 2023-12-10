@@ -19,7 +19,7 @@ spring:
 spring:
     config:
         activate:
-                on-profile: dev
+            on-profile: dev
     h2:
         console:
             enabled: true
@@ -32,21 +32,35 @@ spring:
         hibernate:
             ddl-auto: update
 
+# Production-like Profile Configuration with postgres
+---
+spring:
+    config:
+        activate:
+            on-profile: prod-dev
+    datasource:
+        url: jdbc:postgresql://localhost:5432/postgres
+        driver-class-name: org.postgresql.Driver
+        username: postgres
+        password: postgres
+    jpa:
+        hibernate:
+            ddl-auto: update
+
 # Production Profile Configuration
 ---
 spring:
     config:
         activate:
-                on-profile: prod
+            on-profile: prod
     datasource:
-        url: jdbc:postgresql://your-rds-endpoint:5432/yourdbname
         driver-class-name: org.postgresql.Driver
-        username: ${rds.datasource.username}
-        password: ${rds.datasource.password}
+        url: ${SPRING_DATASOURCE_URL}
+        username: ${SPRING_DATASOURCE_USERNAME}
+        password: ${SPRING_DATASOURCE_PASSWORD}
     jpa:
         hibernate:
             ddl-auto: update
-
 # Optional AWS Credential Service Configuration (for future use)
 # ---
 # spring:
