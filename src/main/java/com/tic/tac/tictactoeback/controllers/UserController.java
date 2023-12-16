@@ -3,18 +3,19 @@ package com.tic.tac.tictactoeback.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tic.tac.tictactoeback.models.User;
-import com.tic.tac.tictactoeback.repositories.UserRepository;
+import com.tic.tac.tictactoeback.services.UserService;
 
 @RestController
 @CrossOrigin
@@ -22,34 +23,35 @@ import com.tic.tac.tictactoeback.repositories.UserRepository;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping("/")
-    List<User> getAllUsers() {
-        return userRepository.findAll();
+    ResponseEntity<List<User>> getAllUsers() {
+        var users = userService.findAll();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/ranked")
+    ResponseEntity<List<User>> getAllUsersRanked() {
+        var rankedUsers = userService.findAllRanked();
+        return new ResponseEntity<>(rankedUsers, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    User getUser(@PathVariable Long id) {
-        return userRepository.findById(id).orElse(null);
+    ResponseEntity<User> getUser(@PathVariable Long id) {
+        User user = userService.findById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping("/")
-    User getUser(@RequestBody User user) {
-        return userRepository.save(user);
-    }
-
-    @PutMapping("/{id}")
-    User getUser(@PathVariable Long id, @RequestBody User user) {
-        User oldUser = userRepository.findById(id).orElse(null);
-        oldUser.setName(user.getName());
-
-        return userRepository.save(oldUser);
+    @PostMapping("/create")
+    public ResponseEntity<User> createUserWithRanking(@RequestBody User user) {
+        User savedUser = userService.createUserWithRanking(user);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    Long deleteUser(@PathVariable Long id) {
-        userRepository.deleteById(id);
-        return id;
+    ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        userService.deleteUserById(id);
+        return new ResponseEntity<>("User and its Ranking deleted successfully", HttpStatus.OK);
     }
 }
