@@ -12,6 +12,6 @@ public class TestController {
 
     @GetMapping("/")
     String testConnection() {
-        return "Success!";
+        return "{\"response\": \"Success!\"}";
     }
 }
