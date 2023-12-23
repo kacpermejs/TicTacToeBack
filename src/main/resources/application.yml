@@ -31,6 +31,8 @@ spring:
     jpa:
         hibernate:
             ddl-auto: update
+        show-sql: true
+
 
 # Production-like Profile Configuration with postgres
 ---
