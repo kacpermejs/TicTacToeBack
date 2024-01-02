@@ -1,14 +1,14 @@
 package com.tic.tac.tictactoeback.websocket.controllers;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import com.tic.tac.tictactoeback.managers.LobbyManager;
+import com.tic.tac.tictactoeback.models.QueueEntry;
 import com.tic.tac.tictactoeback.services.GameService;
 
 @Controller
@@ -17,25 +17,20 @@ public class LobbyController {
     public record GameFoundMessage(Long opponentId, Long gameSessionId) {}
     public record JoinConfirmationMessage(String message) {}
 
-    // List of player ids
-    private Queue<Long> lobby = new LinkedList<>();
-
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
+
     @Autowired
     GameService gameService;
 
     @MessageMapping("/lobby/join")
-    public void enterQueue(Long playerId) {
-        
-        lobby.add(playerId);
-        System.out.println("player " + playerId + " joined. Queue size: " + lobby.size());
+    public void enterQueue(@Payload Long playerId, SimpMessageHeaderAccessor accessor) {
+        String sessionId = accessor.getSessionId();
+        LobbyManager.addUserToQueue(new QueueEntry(playerId, sessionId));
+        System.out.println("player " + playerId + " joined. ");
         sendJoinConfirmation(playerId);
-
-        if (lobby.size() >= 2) {
-            Long playerOneId = lobby.poll();
-            Long playerTwoId = lobby.poll();
-
+        
+        LobbyManager.tryMatchPlayers( (Long playerOneId, Long playerTwoId) -> {
             var session = gameService.createGameSession(playerOneId, playerTwoId);
             
             //Send message to both players
@@ -43,7 +38,7 @@ public class LobbyController {
             GameFoundMessage message2 = new GameFoundMessage(playerOneId, session.getId());
             sendGameFound(playerOneId, message1);
             sendGameFound(playerTwoId, message2);
-        }
+        });
     }
 
     public void sendJoinConfirmation(Long userId) {
