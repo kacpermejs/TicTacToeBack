@@ -6,10 +6,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.BiConsumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.tic.tac.tictactoeback.models.QueueEntry;
 import com.tic.tac.tictactoeback.services.GameService;
 
+@Component
 public class LobbyManager {
     private static final Queue<QueueEntry> lobby = new ConcurrentLinkedQueue<>();
 

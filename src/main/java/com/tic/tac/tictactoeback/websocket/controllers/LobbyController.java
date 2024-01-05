@@ -8,13 +8,14 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.tic.tac.tictactoeback.managers.LobbyManager;
+import com.tic.tac.tictactoeback.models.GameSession;
 import com.tic.tac.tictactoeback.models.QueueEntry;
 import com.tic.tac.tictactoeback.services.GameService;
 
 @Controller
 public class LobbyController {
 
-    public record GameFoundMessage(Long opponentId, Long gameSessionId) {}
+    public record GameFoundMessage(Long opponentId, GameSession gameSession) {}
     public record JoinConfirmationMessage(String message) {}
 
     @Autowired
@@ -34,8 +35,8 @@ public class LobbyController {
             var session = gameService.createGameSession(playerOneId, playerTwoId);
             
             //Send message to both players
-            GameFoundMessage message1 = new GameFoundMessage(playerTwoId, session.getId());
-            GameFoundMessage message2 = new GameFoundMessage(playerOneId, session.getId());
+            GameFoundMessage message1 = new GameFoundMessage(playerTwoId, session);
+            GameFoundMessage message2 = new GameFoundMessage(playerOneId, session);
             sendGameFound(playerOneId, message1);
             sendGameFound(playerTwoId, message2);
         });

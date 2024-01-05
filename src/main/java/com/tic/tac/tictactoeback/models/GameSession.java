@@ -1,5 +1,6 @@
 package com.tic.tac.tictactoeback.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +22,13 @@ import lombok.NoArgsConstructor;
 @Table(name = "game_sessions")
 public class GameSession {
 
+    public enum GameResult {
+        Unfinished,
+        PlayerOneWon,
+        PlayerTwoWon,
+        Draw
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,5 +41,13 @@ public class GameSession {
     @JoinColumn(name = "player_two_id", referencedColumnName = "id")
     private User player2;
 
+    @Column(nullable = false)
+    private char playerOneShape;
+
+    @Column(nullable = false)
+    private char playerTwoShape;
+    
+    @Column(nullable = false)
+    private GameResult gameResult;
 
 }
