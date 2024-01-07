@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tic.tac.tictactoeback.models.Ranking;
-import com.tic.tac.tictactoeback.models.User;
+import com.tic.tac.tictactoeback.models.UserDetail;
 import com.tic.tac.tictactoeback.repositories.RankingRepository;
 import com.tic.tac.tictactoeback.repositories.UserRepository;
 
@@ -23,21 +23,21 @@ public class UserService {
     @Autowired
     private RankingRepository rankingRepository;
 
-    public List<User> findAll() {
+    public List<UserDetail> findAll() {
         return userRepository.findAll();
     }
 
-    public List<User> findAllRanked() {
+    public List<UserDetail> findAllRanked() {
         return userRepository.findAllByOrderByRanking_ScoreDesc();
     }
 
-    public User findById(Long id) {
+    public UserDetail findById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
     @Transactional
     public void deleteUserById(Long userId) {
-        User user = userRepository
+        UserDetail user = userRepository
             .findById(userId)
             .orElseThrow(() -> 
                 new EntityNotFoundException("User not found with id: " + userId));
@@ -46,7 +46,7 @@ public class UserService {
     }
 
     @Transactional
-    public User createUserWithRanking(User user) {
+    public UserDetail createUserWithRanking(UserDetail user) {
         Ranking ranking = new Ranking();
         var random = new Random();
         ranking.setScore(random.nextInt(101));

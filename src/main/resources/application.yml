@@ -48,6 +48,18 @@ spring:
     jpa:
         hibernate:
             ddl-auto: update
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: ${COGNITO_ISSUER_URI}
+                    jwk-set-uri: ${COGNITO_JWK_SET_URI}
+                    audiences:
+                        - ${COGNITO_APP_CLIENT_ID}
+    cognito:
+        region: ${AWS_REGION}
+        issuer-uri: ${COGNITO_ISSUER_URI}
+        jwk-set-uri: ${COGNITO_JWK_SET_URI}
 
 # Production Profile Configuration
 ---
@@ -63,11 +75,11 @@ spring:
     jpa:
         hibernate:
             ddl-auto: update
-# Optional AWS Credential Service Configuration (for future use)
-# ---
-# spring:
-#     profiles: aws-credentials
-#     rds:
-#         datasource:
-#             username: ${aws.rds.datasource.username}
-#             password: ${aws.rds.datasource.password}
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: ${COGNITO_ISSUER_URI}
+                    jwk-set-uri: ${COGNITO_JWK_SET_URI}
+                    audiences:
+                        - ${COGNITO_APP_CLIENT_ID}

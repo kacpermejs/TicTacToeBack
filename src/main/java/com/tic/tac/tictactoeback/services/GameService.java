@@ -9,7 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.tic.tac.tictactoeback.managers.GameManager;
 import com.tic.tac.tictactoeback.models.GameSession;
-import com.tic.tac.tictactoeback.models.User;
+import com.tic.tac.tictactoeback.models.UserDetail;
 import com.tic.tac.tictactoeback.repositories.GameSessionRepository;
 import com.tic.tac.tictactoeback.repositories.UserRepository;
 
@@ -32,9 +32,9 @@ public class GameService {
 
         boolean playerOneCircle = generateRandomBoolean();
         
-        User playerOne = userRepository.findById(playerOneId)
+        UserDetail playerOne = userRepository.findById(playerOneId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player one not found!"));
-        User playerTwo = userRepository.findById(playerTwoId)
+        UserDetail playerTwo = userRepository.findById(playerTwoId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player two not found!"));
         GameSession session = GameSession
             .builder()

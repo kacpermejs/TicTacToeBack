@@ -1,14 +1,18 @@
 package com.tic.tac.tictactoeback.websocket.controllers;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.tic.tac.tictactoeback.managers.GameManager;
 import com.tic.tac.tictactoeback.models.GameBoard;
 import com.tic.tac.tictactoeback.models.GameSession;
+import com.tic.tac.tictactoeback.services.CognitoUserMappingService;
 import com.tic.tac.tictactoeback.services.GameService;
 import com.tic.tac.tictactoeback.websocket.payload.MoveCommand;
 
@@ -21,12 +25,19 @@ public class GameSessionController {
     private GameService gameService;
 
     @Autowired
+    private CognitoUserMappingService cognitoUserMappingService;
+
+    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/move")
-    public void makeMove(@Payload MoveCommand moveCommand) {
+    public void makeMove(@Payload MoveCommand moveCommand, SimpMessageHeaderAccessor accessor) {
         Long sessionId = moveCommand.sessionId();
-        Long movingPlayerId = moveCommand.playerId();
+        String currentCognitoUserId = moveCommand.playerId();
+        System.out.println("current cognito Id: ");
+        System.out.println(currentCognitoUserId);
+        Long movingPlayerId = cognitoUserMappingService.findInternalId(currentCognitoUserId);;
+
         GameSession session = gameService.getSessionWithId(sessionId);
 
         char playersShape = movingPlayerId == session.getPlayer1().getId() 
@@ -43,9 +54,12 @@ public class GameSessionController {
         Long playerOneId = session.getPlayer1().getId();
         Long playerTwoId = session.getPlayer2().getId();
 
+        String playerOneCognitoId = cognitoUserMappingService.findCognitoId(playerOneId);
+        String playerTwoCognitoId = cognitoUserMappingService.findCognitoId(playerTwoId);
+
         // Send the updated game to both players
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(playerOneId), "/playing/update", updatedGameBoard);
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(playerTwoId), "/playing/update", updatedGameBoard);
+        simpMessagingTemplate.convertAndSendToUser(playerOneCognitoId, "/playing/update", updatedGameBoard);
+        simpMessagingTemplate.convertAndSendToUser(playerTwoCognitoId, "/playing/update", updatedGameBoard);
 
     }
 

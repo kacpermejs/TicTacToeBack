@@ -35,11 +35,11 @@ public class GameSession {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "player_one_id", referencedColumnName = "id")
-    private User player1;
+    private UserDetail player1;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "player_two_id", referencedColumnName = "id")
-    private User player2;
+    private UserDetail player2;
 
     @Column(nullable = false)
     private char playerOneShape;
