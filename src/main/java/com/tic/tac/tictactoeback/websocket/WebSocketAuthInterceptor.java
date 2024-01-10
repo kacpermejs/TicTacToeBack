@@ -1,23 +1,14 @@
 package com.tic.tac.tictactoeback.websocket;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import com.tic.tac.tictactoeback.services.CognitoAuthenticationService;
 
 public class WebSocketAuthInterceptor implements ChannelInterceptor  {
 
-    @Autowired
-    private CognitoAuthenticationService authenticationService;
 
    @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {

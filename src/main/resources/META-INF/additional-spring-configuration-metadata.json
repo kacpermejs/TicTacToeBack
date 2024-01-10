@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "spring.cognito.region",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.cognito.region'"
+  },
+  {
+    "name": "spring.cognito.issuer-uri",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.cognito.issuer-uri'"
+  },
+  {
+    "name": "spring.cognito.jwk-set-uri",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.cognito.jwk-set-uri'"
+  }
+]}
