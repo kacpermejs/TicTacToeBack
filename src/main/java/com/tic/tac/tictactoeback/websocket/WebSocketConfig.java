@@ -7,8 +7,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import com.tic.tac.tictactoeback.config.WebSocketGameHandshakeInterceptor;
-
 @Configuration
 @EnableScheduling
 @EnableWebSocketMessageBroker
@@ -19,19 +17,18 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
   //     registration.interceptors(new WebSocketAuthInterceptor());
   // }
   
-  @Override
-  public void configureMessageBroker(MessageBrokerRegistry registry) {
-    registry.enableSimpleBroker("/topic", "/queue", "/playing", "/user");
-    registry.setApplicationDestinationPrefixes("/game");
-    registry.setUserDestinationPrefix("/user");
-  }
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.enableSimpleBroker("/topic", "/queue", "/playing", "/user");
+        registry.setApplicationDestinationPrefixes("/game");
+        registry.setUserDestinationPrefix("/user");
+    }
 
-  @Override
-  public void registerStompEndpoints(StompEndpointRegistry registry) {
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
     registry.addEndpoint("/websocket")
         .setAllowedOriginPatterns("*")
-        .addInterceptors(new WebSocketGameHandshakeInterceptor())
         .withSockJS()
         .setHeartbeatTime(1_000);
-  }
+    }
 }
