@@ -7,22 +7,21 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tic.tac.tictactoeback.models.UserDetail;
+import com.tic.tac.tictactoeback.models.UserDetails;
 import com.tic.tac.tictactoeback.models.UserDetailsDTO;
 import com.tic.tac.tictactoeback.services.CognitoUserMappingService;
 import com.tic.tac.tictactoeback.services.UserService;
-
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/account")
 public class AccountController {
 
-    
+    private record AccountControllerResponse(String message, UserDetails user) {}
     
     @Autowired
     private CognitoUserMappingService cognitoUserMappingService;
@@ -31,11 +30,11 @@ public class AccountController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUserDetails(@AuthenticationPrincipal Jwt jwt, @RequestBody UserDetailsDTO userDTO) {
+    public ResponseEntity<AccountControllerResponse> registerUserDetails(@AuthenticationPrincipal Jwt jwt, @RequestBody UserDetailsDTO userDTO) {
 
         String userId = jwt.getSubject();
 
-        UserDetail user = UserDetail.builder()
+        UserDetails user = UserDetails.builder()
             .name(userDTO.name())
             .build();
 
@@ -43,6 +42,6 @@ public class AccountController {
 
         cognitoUserMappingService.createMapping(savedUser, userId);
         
-        return new ResponseEntity<>("User authentication record created successfully", HttpStatus.OK);
+        return new ResponseEntity<>(new AccountControllerResponse("User authentication record created successfully", savedUser), HttpStatus.OK);
     }
 }

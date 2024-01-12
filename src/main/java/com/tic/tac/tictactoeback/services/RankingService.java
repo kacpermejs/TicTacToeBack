@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tic.tac.tictactoeback.models.Ranking;
-import com.tic.tac.tictactoeback.models.UserDetail;
+import com.tic.tac.tictactoeback.models.UserDetails;
 import com.tic.tac.tictactoeback.repositories.RankingRepository;
 import com.tic.tac.tictactoeback.repositories.UserRepository;
 
@@ -23,7 +23,7 @@ public class RankingService {
 
     @Transactional
     public void updateScore(Long userId, int scoreOffset) {
-        Optional<UserDetail> optionalUser = userRepository.findById(userId);
+        Optional<UserDetails> optionalUser = userRepository.findById(userId);
         optionalUser.ifPresent(user -> {
             Ranking ranking = user.getRanking();
 

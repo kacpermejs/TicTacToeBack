@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import com.tic.tac.tictactoeback.models.CognitoUserDetail;
-import com.tic.tac.tictactoeback.models.UserDetail;
+import com.tic.tac.tictactoeback.models.UserDetails;
 import com.tic.tac.tictactoeback.repositories.CognitoUserDetailRepository;
 
 @Service
@@ -27,7 +27,7 @@ public class CognitoUserMappingService {
             .getCognitoUserId();
     }
 
-    public void createMapping(UserDetail userDetail, String cognitoId) {
+    public void createMapping(UserDetails userDetail, String cognitoId) {
         CognitoUserDetail record = CognitoUserDetail.builder()
             .cognitoUserId(cognitoId)
             .userDetailId(userDetail.getId())

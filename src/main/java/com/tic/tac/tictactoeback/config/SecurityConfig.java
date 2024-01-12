@@ -34,33 +34,32 @@ public class SecurityConfig {
     @Autowired
     private UserAuthenticationFilter userAuthenticationFilter;
 
-    @Bean
-    @Order(1)
-    public SecurityFilterChain registerSecurity(HttpSecurity http) throws Exception {
-        return http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests((httpRequestsAuthorizer) -> 
-                    httpRequestsAuthorizer
-                        .requestMatchers("/public/**").permitAll()
-                        .requestMatchers("/account/register").authenticated()
-                        .anyRequest().denyAll()
-                )
-                .sessionManagement(sessionManagementConfigurer ->
-                    sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .oauth2ResourceServer(oAuth2ResourceServerConfigurerCustomizer())
-                .build();
-    }
+    // @Bean
+    // @Order(2)
+    // public SecurityFilterChain registerSecurity(HttpSecurity http) throws Exception {
+    //     return http
+    //             .csrf(csrf -> csrf.disable())
+    //             .authorizeHttpRequests((httpRequestsAuthorizer) -> 
+    //                 httpRequestsAuthorizer
+    //                     .requestMatchers("/public/**").permitAll()
+    //                     .requestMatchers("/account/register").authenticated()
+    //                     .anyRequest().denyAll()
+    //             )
+    //             .sessionManagement(sessionManagementConfigurer ->
+    //                 sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+    //             )
+    //             .oauth2ResourceServer(oAuth2ResourceServerConfigurerCustomizer())
+    //             .build();
+    // }
 
     @Bean
-    @Order(2)
     public SecurityFilterChain apiSecurity(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .addFilterAfter(userAuthenticationFilter, BearerTokenAuthenticationFilter.class)
                 .authorizeHttpRequests((httpRequestsAuthorizer) -> 
                     httpRequestsAuthorizer
-                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/public/**", "/account/register").permitAll()
                         .requestMatchers("/websocket/**").permitAll()
                         .anyRequest().authenticated()
                 )

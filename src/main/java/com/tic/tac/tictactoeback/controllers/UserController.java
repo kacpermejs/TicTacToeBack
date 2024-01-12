@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tic.tac.tictactoeback.models.UserDetail;
+import com.tic.tac.tictactoeback.models.UserDetails;
 import com.tic.tac.tictactoeback.services.UserService;
 
 @RestController
@@ -26,26 +26,26 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/")
-    ResponseEntity<List<UserDetail>> getAllUsers() {
+    ResponseEntity<List<UserDetails>> getAllUsers() {
         var users = userService.findAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/ranked")
-    ResponseEntity<List<UserDetail>> getAllUsersRanked() {
+    ResponseEntity<List<UserDetails>> getAllUsersRanked() {
         var rankedUsers = userService.findAllRanked();
         return new ResponseEntity<>(rankedUsers, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<UserDetail> getUser(@PathVariable Long id) {
-        UserDetail user = userService.findById(id);
+    ResponseEntity<UserDetails> getUser(@PathVariable Long id) {
+        UserDetails user = userService.findById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UserDetail> createUserWithRanking(@RequestBody UserDetail user) {
-        UserDetail savedUser = userService.createUserWithRanking(user);
+    public ResponseEntity<UserDetails> createUserWithRanking(@RequestBody UserDetails user) {
+        UserDetails savedUser = userService.createUserWithRanking(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 

@@ -33,6 +33,12 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         // Here we are for sure, context object holds a valid and decoded JWT token.
         SecurityContext context = SecurityContextHolder.getContext();
+
+        String uri = request.getRequestURI();
+        if(uri.contains("/account/register")) {
+            chain.doFilter(request, response);
+            return;
+        }
         try {
             if (context.getAuthentication() instanceof JwtAuthenticationToken) {
                 JwtAuthenticationToken auth = (JwtAuthenticationToken) context.getAuthentication();
