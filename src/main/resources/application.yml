@@ -29,14 +29,17 @@ spring:
 # Development Profile Configuration
 ---
 spring:
+    output:
+        ansi:
+            enabled: always
     config:
         activate:
             on-profile: dev
     datasource:
-        url: jdbc:postgresql://localhost:5432/postgres
         driver-class-name: org.postgresql.Driver
-        username: postgres
-        password: postgres
+        url: ${SPRING_DATASOURCE_URL}
+        username: ${SPRING_DATASOURCE_USERNAME}
+        password: ${SPRING_DATASOURCE_PASSWORD}
     jpa:
         hibernate:
             ddl-auto: update

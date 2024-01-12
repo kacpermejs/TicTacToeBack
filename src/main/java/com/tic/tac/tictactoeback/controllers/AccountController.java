@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tic.tac.tictactoeback.models.UserDetail;
+import com.tic.tac.tictactoeback.models.UserDetailsDTO;
 import com.tic.tac.tictactoeback.services.CognitoUserMappingService;
 import com.tic.tac.tictactoeback.services.UserService;
 
@@ -20,6 +21,8 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 @CrossOrigin
 @RequestMapping("/account")
 public class AccountController {
+
+    
     
     @Autowired
     private CognitoUserMappingService cognitoUserMappingService;
@@ -28,9 +31,13 @@ public class AccountController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUserDetails(@AuthenticationPrincipal Jwt jwt, @RequestBody UserDetail user) {
+    public ResponseEntity<String> registerUserDetails(@AuthenticationPrincipal Jwt jwt, @RequestBody UserDetailsDTO userDTO) {
 
         String userId = jwt.getSubject();
+
+        UserDetail user = UserDetail.builder()
+            .name(userDTO.name())
+            .build();
 
         var savedUser = userService.createUserWithRanking(user);
 

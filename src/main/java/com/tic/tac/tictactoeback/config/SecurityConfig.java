@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.security.authorization.AuthorizationManager;
@@ -33,6 +35,25 @@ public class SecurityConfig {
     private UserAuthenticationFilter userAuthenticationFilter;
 
     @Bean
+    @Order(1)
+    public SecurityFilterChain registerSecurity(HttpSecurity http) throws Exception {
+        return http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests((httpRequestsAuthorizer) -> 
+                    httpRequestsAuthorizer
+                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/account/register").authenticated()
+                        .anyRequest().denyAll()
+                )
+                .sessionManagement(sessionManagementConfigurer ->
+                    sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .oauth2ResourceServer(oAuth2ResourceServerConfigurerCustomizer())
+                .build();
+    }
+
+    @Bean
+    @Order(2)
     public SecurityFilterChain apiSecurity(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
@@ -76,7 +97,7 @@ public class SecurityConfig {
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
 				//FIXME wymaga konfiguracji
                         .allowedOriginPatterns("*")

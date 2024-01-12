@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tic.tac.tictactoeback.services.RankingService;
 
+import lombok.Value;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/ranking")
