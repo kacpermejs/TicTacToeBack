@@ -22,4 +22,4 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 COPY --from=build /app/target/tic-tac-toe-back.jar ./app.jar
 EXPOSE 8080
-CMD ["java", "-jar", "./app.jar", "--spring.profiles.active=${SPRING_PROFILES_ACTIVE}"]
+CMD java -jar ./app.jar --spring.profiles.active=$SPRING_PROFILES_ACTIVE
