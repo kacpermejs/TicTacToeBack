@@ -1,8 +1,16 @@
-FROM openjdk:21-jdk-slim
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-EXPOSE 8080
+# Build
+FROM maven:3.9.5-eclipse-temurin-21-alpine AS build
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean install -DskipTests
 
+RUN echo "Build completed!"
+
+# Run
+FROM openjdk:21-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 # Ustawianie domyślnego środowiska
 ENV SPRING_PROFILES_ACTIVE=prod
 
@@ -13,4 +21,5 @@ ENV SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE
 RUN echo "Current environment is: $SPRING_PROFILES_ACTIVE"
 RUN echo "Profile setting: --spring.profiles.active=${SPRING_PROFILES_ACTIVE}"
 
+EXPOSE 8080
 CMD ["java", "-jar", "/app.jar", "--spring.profiles.active=${SPRING_PROFILES_ACTIVE}"]
