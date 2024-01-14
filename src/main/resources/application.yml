@@ -57,7 +57,7 @@ spring:
         password: ${SPRING_DATASOURCE_PASSWORD}
     jpa:
         hibernate:
-            ddl-auto: create
+            ddl-auto: ${POSTGRE_DDL_AUTO}
         show-sql: true
 logging:
     level:
