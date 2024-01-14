@@ -7,10 +7,10 @@ RUN mvn clean install -DskipTests
 
 RUN echo "Build completed!"
 
-RUN echo "Running in prod profile!"
+RUN echo "Running in dev profile!"
 
 FROM openjdk:21-jdk-slim
 WORKDIR /app
 COPY --from=build /app/target/tic-tac-toe-back.jar ./app.jar
 EXPOSE 8080
-CMD java -jar ./app.jar --spring.profiles.active=prod
+CMD java -jar ./app.jar --spring.profiles.active=dev
