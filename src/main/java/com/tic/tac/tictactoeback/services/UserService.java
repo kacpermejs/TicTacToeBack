@@ -1,7 +1,6 @@
 package com.tic.tac.tictactoeback.services;
 
 import java.util.List;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,12 +46,14 @@ public class UserService {
 
     @Transactional
     public UserDetails createUserWithRanking(UserDetails user) {
-        Ranking ranking = new Ranking();
-        var random = new Random();
-        ranking.setScore(random.nextInt(101));
+        Ranking ranking = Ranking.builder()
+            .matchesWon(0)
+            .matchesLost(0)
+            .score(0)
+            .build();
         rankingRepository.save(ranking);
 
-        user.setRanking(ranking); // Set the relationship
+        user.setRanking(ranking);
         return userRepository.save(user);
     }
 }
