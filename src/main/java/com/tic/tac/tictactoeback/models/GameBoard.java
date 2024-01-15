@@ -6,6 +6,7 @@ public class GameBoard {
 
     private char currentPlayer;
     private boolean gameWon;
+    private boolean gameEnded;
     private char winner;
 
     private char[][] board;
@@ -17,6 +18,7 @@ public class GameBoard {
             Arrays.fill(row, ' '); // Initialize the board with empty spaces
         }
         this.gameWon = false;
+        this.gameEnded = false;
         winner = ' '; // No winner initially
     }
     
@@ -30,6 +32,10 @@ public class GameBoard {
         return false;
     }
 
+    public boolean gameEnded() {
+        return gameEnded;
+    }
+
     public boolean isGameWon() {
         return gameWon;
     }
@@ -39,7 +45,7 @@ public class GameBoard {
     }
 
     private boolean isValidMove(int row, int col) {
-        return !gameWon && board[row][col] == ' ';
+        return !gameWon && !gameEnded && board[row][col] == ' ';
     }
 
     private void switchPlayer() {
@@ -50,8 +56,24 @@ public class GameBoard {
         // Check for a win in the current row, column, and diagonals
         if (checkRow(row) || checkColumn(col) || checkDiagonals(row, col)) {
             gameWon = true;
+            gameEnded = true;
             winner = currentPlayer;
         }
+
+        if (boardFull()) {
+            gameEnded = true;
+        }
+    }
+
+    private boolean boardFull() {
+        for (char[] row : board) {
+            for (char cell : row) {
+                if (cell == ' ') {
+                    return false; // Found an empty cell, board is not full
+                }
+            }
+        }
+        return true; // All cells are filled, board is full
     }
 
     private boolean checkRow(int row) {

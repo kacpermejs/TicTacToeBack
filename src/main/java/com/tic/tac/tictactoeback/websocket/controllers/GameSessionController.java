@@ -12,6 +12,7 @@ import com.tic.tac.tictactoeback.models.GameBoard;
 import com.tic.tac.tictactoeback.models.GameSession;
 import com.tic.tac.tictactoeback.services.CognitoUserMappingService;
 import com.tic.tac.tictactoeback.services.GameService;
+import com.tic.tac.tictactoeback.services.RankingService;
 import com.tic.tac.tictactoeback.websocket.payload.MoveCommand;
 
 @Controller
@@ -24,6 +25,9 @@ public class GameSessionController {
 
     @Autowired
     private CognitoUserMappingService cognitoUserMappingService;
+
+    @Autowired
+    RankingService rankingService;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -59,6 +63,10 @@ public class GameSessionController {
         simpMessagingTemplate.convertAndSendToUser(playerOneCognitoId, "/playing/update", updatedGameBoard);
         simpMessagingTemplate.convertAndSendToUser(playerTwoCognitoId, "/playing/update", updatedGameBoard);
 
+        if(updatedGameBoard.gameEnded()) {
+
+            rankingService.updateOnGameResult(session, updatedGameBoard);
+        }
     }
 
     // @MessageMapping("/in-game-presence")

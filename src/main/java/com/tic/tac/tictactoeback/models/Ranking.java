@@ -35,4 +35,30 @@ public class Ranking {
     @NotNull
     @Column(nullable = false)
     private int score;
+
+    //TODO: some better calculation
+    public void updateScoreWin(int opponentScore) {
+        if (opponentScore <= this.score) {
+            this.score++;
+        }
+    }
+
+    public void updateScoreLost(int opponentScore) {
+        if (opponentScore <= this.score && this.score > 0 ) {
+            this.score--;
+        } 
+    }
+
+    public void updateScoreDraw(int opponentScore) {
+        
+    }
+
+    public void matchWon() {
+        this.matchesWon++;
+    }
+
+
+    public void matchLost() {
+        this.matchesLost++;
+    }
 }
