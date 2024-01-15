@@ -32,7 +32,7 @@ public class GameBoard {
         return false;
     }
 
-    public boolean gameEnded() {
+    public boolean isGameEnded() {
         return gameEnded;
     }
 

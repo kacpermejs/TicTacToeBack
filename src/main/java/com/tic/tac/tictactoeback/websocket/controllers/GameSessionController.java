@@ -63,7 +63,7 @@ public class GameSessionController {
         simpMessagingTemplate.convertAndSendToUser(playerOneCognitoId, "/playing/update", updatedGameBoard);
         simpMessagingTemplate.convertAndSendToUser(playerTwoCognitoId, "/playing/update", updatedGameBoard);
 
-        if(updatedGameBoard.gameEnded()) {
+        if(updatedGameBoard.isGameEnded()) {
 
             rankingService.updateOnGameResult(session, updatedGameBoard);
         }
