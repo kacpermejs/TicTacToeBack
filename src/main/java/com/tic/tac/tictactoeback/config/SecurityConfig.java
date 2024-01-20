@@ -59,7 +59,7 @@ public class SecurityConfig {
                 .addFilterAfter(userAuthenticationFilter, BearerTokenAuthenticationFilter.class)
                 .authorizeHttpRequests((httpRequestsAuthorizer) -> 
                     httpRequestsAuthorizer
-                        .requestMatchers("/public/**", "/account/register").permitAll()
+                        .requestMatchers("/", "/public/**", "/account/register").permitAll()
                         .requestMatchers("/websocket/**").permitAll()
                         .anyRequest().authenticated()
                 )
